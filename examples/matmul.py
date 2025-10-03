@@ -15,6 +15,7 @@ import torch
 from torch import Tensor
 
 import helion
+from helion._testing import DEVICE
 from helion._testing import run_example
 import helion.language as hl
 
@@ -65,9 +66,9 @@ def autotune(m: int, k: int, n: int) -> None:
         k (int): Number of columns in matrix x and rows in matrix y.
         n (int): Number of columns in matrix y.
     """
-    x = torch.randn([m, k], device="cuda", dtype=torch.float16)
-    y = torch.randn([k, n], device="cuda", dtype=torch.float16)
-    bias = torch.randn([n], device="cuda", dtype=torch.float16)
+    x = torch.randn([m, k], device=DEVICE, dtype=torch.float16)
+    y = torch.randn([k, n], device=DEVICE, dtype=torch.float16)
+    bias = torch.randn([n], device=DEVICE, dtype=torch.float16)
     args = (x, y, lambda acc, tile: torch.relu(acc + bias[tile[1]]))
     best_config = matmul.autotune(args, force=True)
     print(f"Best config: {best_config}")
@@ -87,10 +88,10 @@ def check(m: int, k: int, n: int) -> None:
         k (int): Number of columns in matrix x and rows in matrix y.
         n (int): Number of columns in matrix y.
     """
-    x = torch.randn([m, k], device="cuda", dtype=torch.float16)
-    y = torch.randn([k, n], device="cuda", dtype=torch.float16)
-    bias = torch.randn([n], device="cuda", dtype=torch.float16)
-    bias_scalar = torch.randn([1], device="cuda", dtype=torch.float16)
+    x = torch.randn([m, k], device=DEVICE, dtype=torch.float16)
+    y = torch.randn([k, n], device=DEVICE, dtype=torch.float16)
+    bias = torch.randn([n], device=DEVICE, dtype=torch.float16)
+    bias_scalar = torch.randn([1], device=DEVICE, dtype=torch.float16)
     # Test without bias
     run_example(matmul, torch.matmul, (x, y))
 
